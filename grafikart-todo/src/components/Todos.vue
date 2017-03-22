@@ -10,8 +10,9 @@
         <ul class="todo-list">
             <li class="todo" v-for="todo in todos" :class="{completed : todo.completed}">
                 <div class="view">
-                    <input type="checkbox" v-model="todo.completed" class="toggle">
-                    <label>{{ todo.name }}</label>
+                    <input type="checkbox" class="toggle__input" v-model="todo.completed"  :id="todo.labelid">
+                    <label class="toggle" :for="todo.labelid"></label>
+                    <div class="label">{{ todo.name }}</div>
                 </div>
             </li>
         </ul>
@@ -25,13 +26,19 @@
 
 <script>
 /* eslint-disable */
+var labelid = 0;
+function newID(){
+    return "id-" + labelid++;
+}
+
 export default {
  // 13 min 14sec
   data () {
     return {
       todos: [{
-          name: 'test',
-              completed: false
+                name: 'test',
+                completed: false,
+                labelid : newID()
             }],
             newTodo: ''
         }
@@ -40,10 +47,12 @@ export default {
         addTodo(){
             this.todos.push({
                 completed:false,
-                name: this.newTodo
+                name: this.newTodo,
+                labelid : newID()
             })
             this.newTodo = '';
-        }
+        },
+        
     },
     computed: {
         remaining(){
