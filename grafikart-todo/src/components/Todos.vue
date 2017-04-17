@@ -6,6 +6,7 @@
             >
         </header>
         <div class="main">
+            <input type="checkbox" class="toggle-all" v-model="allDone">
             <ul class="todo-list">
                 <li class="todo" v-for="todo in filteredTodos" :class="{completed : todo.completed}">
                     <div class="view">
@@ -44,14 +45,15 @@ export default {
  // 18 min 14sec
   data () {
     return {
-      todos: [{
-                name: 'test',
-                completed: false,
-                labelid : newID()
-            }],
-            newTodo: '',
-            filter: 'all'
-        }
+        
+        todos: [{
+                    name: 'test',
+                    completed: false,
+                    labelid : newID()
+                }],
+                newTodo: '',
+                filter: 'all'
+            }
     },
     methods: {
         addTodo(){
@@ -65,6 +67,16 @@ export default {
         
     },
     computed: {
+        allDone : {
+            get(){
+                return this.remaining === 0
+            },
+            set(value){
+                this.todos.forEach(function(todo) {
+                    todo.completed = value;
+                }, this);
+            }
+        },
         remaining(){
             return this.todos.filter(todo => !todo.completed).length
         },
