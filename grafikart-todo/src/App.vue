@@ -1,6 +1,8 @@
 <template>
   <div>
-    <todos></todos>
+    {{todos}}
+    <todos v-model="todos"></todos>
+    <button @click="addTodo">Ajouter tache</button>
   </div>
 </template>
 
@@ -9,6 +11,22 @@
 
   export default {
     name: 'app',
+    data () {
+      return {
+        todos: [{
+          name: 'test',
+          completed: false
+        }]
+      }
+    },
+    methods: {
+      addTodo () {
+        this.todos.push({
+          name: 'coucou',
+          completed: false
+        })
+      }
+    },
     components: {
       Todos
     }

@@ -7,13 +7,19 @@
         <div class="main">
             <input type="checkbox" class="toggle-all" v-model="allDone">
             <ul class="todo-list">
-                <li class="todo" v-for="todo in filteredTodos" :class="{completed : todo.completed}">
+                <li class="todo" v-for="todo in filteredTodos" :class="{completed : todo.completed, editing: todo == editing}">
                     <div class="view">
-                        <input type="checkbox" class="toggle__input" v-model="todo.completed" :id="todo.labelid">
-                        <label class="toggle" :for="todo.labelid"></label>
+                        <input type="checkbox" class="toggle__input" v-model="todo.completed">
+                        <label class="toggle" @dblclick="editTodo(todo)" ></label>
                         <div class="label">{{ todo.name }}</div>
                         <button class="destroy" @click.prevent="deleteTodo(todo)"></button>
                     </div>
+                    <input type="text" class="edit" 
+                    v-model="todo.name" 
+                    @keyup.enter="doneEdit" 
+                    @keyup.esc="cancelEdit"
+                    @blur="doneEdit"
+                    v-focus="todo === editing">
                 </li>
             </ul>
         </div><footer class="footer" v-show="todos.length > 0">
@@ -37,21 +43,19 @@
 </template>
 
 <script>
-    var labelid = 0
-    function newID () {
-      return 'id-' + labelid++
-    }
     export default {
-        // 18 min 14sec
+        // 26min
+      props: {
+        value: {type: Array, default: []}
+      },
+
       data () {
         return {
-          todos: [{
-            name: 'test',
-            completed: false,
-            labelid: newID()
-          }],
+          todos: this.value,
           newTodo: '',
-          filter: 'all'
+          filter: 'all',
+          editing: null,
+          oldTodo: ''
         }
       },
       methods: {
@@ -59,29 +63,49 @@
         addTodo () {
           this.todos.push({
             completed: false,
-            name: this.newTodo,
-            labelid: newID()
+            name: this.newTodo
           })
           this.newTodo = ''
+        },
+
+        deleteTodo (todo) {
+          this.todos = this.todos.filter(i => i !== todo)
+          this.$emit('input', this.todos)
+        },
+
+        deleteCompleted () {
+          this.todos = this.todos.filter(todo => !todo.completed)
+          this.$emit('input', this.todos)
+        },
+        editTodo (todo) {
+          this.editing = todo
+          this.oldTodo = todo.name
+        },
+        doneEdit () {
+          this.editing = null
+        },
+        cancelEdit () {
+          this.editing.name = this.oldTodo
+          this.doneEdit()
         }
 
       },
       computed: {
-          allDone : {
-            get(){
-                return this.remaining === 0
-            },
-            set(value){
-                this.todos.forEach(function(todo) {
-                    todo.completed = value;
-                }, this);
-            }
+        allDone: {
+          get () {
+            return this.remaining === 0
+          },
+          set (value) {
+            this.todos.forEach(function (todo) {
+              todo.completed = value
+            }, this)
+          }
         },
-        remaining(){
-            return this.todos.filter(todo => !todo.completed).length
+        remaining () {
+          return this.todos.filter(todo => !todo.completed).length
         },
-        completed(){
-            return this.todos.filter(todo => todo.completed).length != 0;
+        completed () {
+          return this.todos.filter(todo => todo.completed).length !== 0
         },
         filteredTodos () {
           if (this.filter === 'todo') {
@@ -90,6 +114,13 @@
             this.todos.filter(todo => todo.completed)
           }
           return this.todos
+        }
+      },
+      directives: {
+        focus (el, value) {
+          if (value) {
+            el.focus()
+          }
         }
       }
     }
