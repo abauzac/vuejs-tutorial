@@ -5,15 +5,16 @@
 </template>
 
 <script>
-import Todos from './components/Todos'
+  import Todos from './components/Todos'
 
-export default {
-  name: 'app',
-  components: {
-    Todos
+  export default {
+    name: 'app',
+    components: {
+      Todos
+    }
   }
-}
 </script>
 
 <style>
+  
 </style>

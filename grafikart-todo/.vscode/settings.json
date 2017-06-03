@@ -1,0 +1,44 @@
+// Placez vos paramètres dans ce fichier pour remplacer les paramètres par défaut et les paramètres utilisateur.
+{
+    // disable js validation of vscode and use StandardJS instead
+    "javascript.validate.enable": false,
+    "emmet.syntaxProfiles": {
+        "vue-html": "html",
+        "vue": "html"
+    },
+    "vetur.format.js.InsertSpaceBeforeFunctionParenthesis": true,
+    // Whether to have initial indent for <style> section
+    "vetur.format.styleInitialIndent": true,
+    // Whether to have initial indent for <script> section
+    "vetur.format.scriptInitialIndent": true,
+    "eslint.enable": true,
+    "eslint.options": {
+        "extensions": [
+            ".html",
+            ".js",
+            ".vue",
+            ".jsx"
+        ]
+    },
+    "eslint.validate": [
+        {
+            "language": "html",
+            "autoFix": true
+        },
+        {
+            "language": "vue",
+            "autoFix": true
+        },
+        {
+            "language": "javascript",
+            "autoFix": true
+        },
+        {
+            "language": "javascriptreact",
+            "autoFix": true
+        }
+    ],
+    // Run the linter on save (onSave) or on type (onType)
+    "eslint.run": "onSave",
+    "eslint.autoFixOnSave": true
+}
